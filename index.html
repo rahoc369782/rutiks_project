@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <title>Sukun.com</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="main_logo_container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCIKFV-SV2wntDO_mIt_-rwbNC8jOhkkfgyDJ__DA&s"
+            alt="">
+        <h3>Sukun</h3>
+    </div>
+    <div class="search_box">
+        <input type="text" name="song" placeholder="Search for songs" id="search_from_songs" type="submit"
+            onkeyup="Search()">
+        <i class="bi bi-search-heart-fill"></i>
+    </div>
+    <div class="songs_container">
+        <div class="songs_playlist_box">
+            <div onclick="play(myAudio)">
+                <span id="words">Im am Love</span>
+                <audio id="myAudio" src="./Audio/im am love.mp3" type="audio/mp3"></audio>
+            </div>
+            <div onclick="play(myAudio1)">
+                <span>Ek din pyar - MC STAN</span>
+                <audio id="myAudio1" src="./Audio/Ek din pyarr.mp3"></audio>
+            </div>
+            <div onclick="play(myAudio2)">
+                <span>Rabba jandaa</span>
+                <audio id="myAudio2" src="./Audio/Oo-Rabba-Janda(PagalWorld).mp3"></audio>
+            </div>
+            <div onclick="play(myAudio3)">
+                <spam>MH 12 - MC STAN</spam>
+                <audio id="myAudio3" src="./Audio/MH 12.mp3"></audio>
+            </div>
+            <div onclick="play(myAudio4)">
+                <spam>Ram siya ram</spam>
+                <audio id="myAudio4" src="./Audio/Raam Siya Raam_64(PagalWorld.com.se).mp3"></audio>
+            </div>
+            <div onclick="play(myAudio5)">
+                <spam>Behti hawa sa tha vo</spam>
+                <audio id="myAudio5" src="./Audio/Behti Hawa Sa Tha Woh.mp3"></audio>
+            </div>
+            <div onclick="play(myAudio6)">
+                <span>Basti ka hasti - MC STAN</span>
+                <audio id="myAudio6" src="./Audio/Basti Ka Hasti - MC STAN.mp3"></audio>
+            </div>
+            <div onclick="play(myAudio7)">
+                <span>Kesariya</span>
+                <audio id="myAudio7" src="./Audio/Kesariya_64(PagalWorld.com.se).mp3"></audio>
+            </div>
+            <div onclick="play(myAudio8)">
+                <span>Kun faya kum</span>
+                <audio id="myAudio8" src="./Audio/Kun Faya Kun.mp3"></audio>
+            </div>
+            <div onclick="play(myAudio9)">
+                <span>Deva Deva</span>
+                <audio id="myAudio9" src="./Audio/Deva Deva_64(PagalWorld.com.se).mp3"></audio>
+            </div>
+            <div onclick="play(myAudio10)">
+                <span>Shana bann</span>
+                <audio id="myAudio10" src="./Audio/Shana Bann - MC STAN 128 Kbps.mp3"></audio>
+            </div>
+            <div onclick="play(myAudio11)">
+                <span>Ratain Lambeya</span>
+                <audio id="myAudio11" src="./Audio/Raatan Lambiyan_64(PagalWorld.com.se).mp3"></audio>
+            </div>
+            <div onclick="play(myAudio12)">
+                <span>Lut gaye</span>
+                <audio id="myAudio12" src="./Audio/Lut Gaye_64(PagalWorld.com.pe).mp3"></audio>
+            </div>
+            <div onclick="play(myAudio13)">
+                <span>Kal hai mera show</span>
+                <audio id="myAudio13" src="./Audio/Kal Hai Mera Show - Insaan 128 Kbps.mp3"></audio>
+            </div>
+            <div onclick="play(myAudio15)">
+                <span>Company</span>
+                <audio id="myAudio15" src="./Audio/Company_64(PagalWorld.com.se).mp3"></audio>
+            </div>
+            <div onclick="play(myAudio16)">
+                <span>Mann meri jann</span>
+                <audio id="myAudio16" src="./Audio/Maan Meri Jaan_64(PagalWorld.com.se).mp3"></audio>
+            </div>
+        </div>
+        <div class="error">
+        </div>
+    </div>
+    </div>
+
+    <script defer src="script.js"></script>
+</body>
+
+</html>
