@@ -24,13 +24,7 @@ function Videodetail() {
   };
   return (
 
-      <div>
-        {isAuthenticated ? (
-          <p>You are authenticated with Google.</p>
-        ) : (
-          <button onClick={handleGoogleLogin}>Login with Google</button>
-        )}
-      </div>
+  <div className="">Ho</div>
 
   )
 }
