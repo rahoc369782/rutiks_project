@@ -1,47 +1,183 @@
+<!-- index.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Face to Face Video Streaming</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One-to-One Video</title>
+    <style>
+/* styles.css */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f2f2f2;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.video-container {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+video {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-around;
+}
+
+.control-button {
+    padding: 15px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.video-button {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.audio-button {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.screen-button {
+    background-color: #2ecc71;
+    color: #fff;
+}
+
+.camera-button {
+    background-color: #f39c12;
+    color: #fff;
+}
+
+.control-button:hover {
+    background-color: #2c3e50;
+}
+
+    </style>
+
 </head>
 <body>
-    <h1>Face to Face Video Streaming</h1>
-    <video id="video" width="600" height="600" style="border: 1px solid red;" autoplay></video>
+    <div class="container">
+        <div class="video-container">
+            <video id="localVideo" autoplay muted></video>
+        </div>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io('http://localhost:8080');
-
-        socket.emit('msg','hi');
-
-        const video = document.getElementById('video');
-
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-            .then((stream) => {
-                video.srcObject = stream;
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                console.log(ctx)
-                setInterval(() => {
-                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    console.log(canvas.toDataURL('image/jpeg'))
-                    socket.emit('stream', canvas.toDataURL('image/jpeg'));
-                }, 100);
-            })
-            .catch((err) => {
-                console.error('Error accessing the camera:', err);
-            });
-
-        socket.on('stream', (image) => {
-            const otherVideo = document.getElementById('otherVideo');
-            if (!otherVideo) {
-                const newVideo = document.createElement('video');
-                newVideo.id = 'otherVideo';
-                newVideo.width = 400;
-                newVideo.height = 300;
-                document.body.appendChild(newVideo);
-            }
-            otherVideo.src = image;
-        });
-    </script>
+        <div class="controls">
+            <button id="toggleVideo" class="control-button video-button">Start/Stop Video</button>
+            <button id="toggleAudio" class="control-button audio-button">Mute/Unmute Audio</button>
+            <button id="shareScreen" class="control-button screen-button">Share Screen</button>
+            <button id="switchCamera" class="control-button camera-button">Switch Camera</button>
+        </div>
+    </div>
 </body>
+<script>
+/// app.js
+let localStream;
+let isVideoOn = true;
+let isAudioOn = true;
+
+const localVideo = document.getElementById('localVideo');
+const toggleVideoButton = document.getElementById('toggleVideo');
+const toggleAudioButton = document.getElementById('toggleAudio');
+const shareScreenButton = document.getElementById('shareScreen');
+const switchCameraButton = document.getElementById('switchCamera');
+
+async function getLocalStream() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        localStream = stream;
+        console.log(stream)
+        localVideo.srcObject = stream;
+    } catch (error) {
+        console.error('Error accessing media devices:', error);
+    }
+}
+
+function toggleVideo() {
+    isVideoOn = !isVideoOn;
+    localStream.getVideoTracks().forEach(track => track.enabled = isVideoOn);
+}
+
+function toggleAudio() {
+    isAudioOn = !isAudioOn;
+    localStream.getAudioTracks().forEach(track => track.enabled = isAudioOn);
+}
+
+async function shareScreen() {
+    try {
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+        const [screenTrack] = screenStream.getVideoTracks();
+        const [currentVideoTrack] = localStream.getVideoTracks();
+
+        // Save the current state of video and audio
+        const isVideoOnBeforeSharing = isVideoOn;
+        const isAudioOnBeforeSharing = isAudioOn;
+
+        // Mute video and audio during screen sharing
+        toggleVideo();
+        toggleAudio();
+
+        // Remove current video track and add screen sharing track
+        localStream.removeTrack(currentVideoTrack);
+        localStream.addTrack(screenTrack);
+
+        // Handle stopping screen sharing
+        screenTrack.onended = () => {
+            localStream.removeTrack(screenTrack);
+            localStream.addTrack(currentVideoTrack);
+
+            // Resume previous state of video and audio
+            if (isVideoOnBeforeSharing) {
+                toggleVideo();
+            }
+            if (isAudioOnBeforeSharing) {
+                toggleAudio();
+            }
+        };
+
+        // Update button text
+        toggleVideoButton.innerHTML = 'Resume Video';
+    } catch (error) {
+        console.error('Error sharing screen:', error);
+    }
+}
+
+
+
+async function switchCamera() {
+    await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'environment' },
+                audio: true, // Make sure to include audio if needed
+            });
+}
+
+getLocalStream();
+
+toggleVideoButton.addEventListener('click', toggleVideo);
+toggleAudioButton.addEventListener('click', toggleAudio);
+shareScreenButton.addEventListener('click', shareScreen);
+switchCameraButton.addEventListener('click', switchCamera);
+
+</script>
 </html>
